@@ -1,17 +1,16 @@
 package game;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
-import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -31,6 +30,17 @@ public class DBZGame {
 	
 	static File charFolder = new File("src/characters/");
 	static String[] characterList = charFolder.list();
+	
+
+	static void createCharSheet(String race, String name, String SPname) throws IOException, ClassNotFoundException {
+	  FileWriter wr = new FileWriter("characters/" + name);
+	  BufferedWriter writer = new BufferedWriter(wr); 
+  	  writer.write(race + System.lineSeparator());
+  	  writer.write(name + System.lineSeparator());
+  	  writer.write(SPname);
+  	  System.out.println("Character created!");
+  	  writer.close();
+	  }
 	
 
 	
@@ -94,10 +104,10 @@ public class DBZGame {
 					
 		Composite charLister = new Composite(tabs, 0);
 					GridLayout layout2 = new GridLayout();
-					layout.numColumns = 1; 
+					layout.numColumns = 2; 
 					charLister.setLayout(layout);
 					
-					GridData data = new GridData(GridData.FILL_HORIZONTAL);
+					GridData data = new GridData(GridData.FILL_BOTH);
 					
 					List characters = new List(charLister, SWT.SINGLE);
 					
@@ -105,7 +115,7 @@ public class DBZGame {
 						public void widgetSelected(SelectionEvent e) {
 								success.setVisible(true);
 								try {
-									CharacterCreation.createCharSheet(type.getText(), name.getText(), SPname.getText());
+									createCharSheet(type.getText(), name.getText(), SPname.getText());
 									characters.add(name.getText());
 								} catch (ClassNotFoundException | IOException e1) {
 									// TODO Auto-generated catch block
@@ -169,11 +179,27 @@ public class DBZGame {
 	   
 	    
 		Composite battle = new Composite(tabs, 0);
-		
+				    GridLayout layout3 = new GridLayout();
+				    layout.numColumns = 2;
+				    battle.setLayout(layout);
+					
+				    GridData whoBattleData = new GridData();
+					whoBattleData.horizontalSpan = 2;
+					Label whoBattle = widgets.createLabel(battle, 0, "Who would you like to battle?");
+					whoBattle.setLayoutData(whoBattleData);
+					
+					
+					
+					
+					
+					TabItem battleTab = new TabItem(tabs, 0);
+					battleTab.setText("Battle");			
+					battleTab.setControl(battle);
+					
+					
 
 	    
-	    game.open();
-	    
+		game.open();
 		
 		while (!game.isDisposed()) {
 			if (!display.readAndDispatch()) {
